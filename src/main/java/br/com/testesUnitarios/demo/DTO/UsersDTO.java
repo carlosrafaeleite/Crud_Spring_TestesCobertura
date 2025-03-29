@@ -2,6 +2,7 @@ package br.com.testesUnitarios.demo.DTO;
 
 import br.com.testesUnitarios.demo.domain.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,7 @@ public class UsersDTO {
     private String nome;
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public UsersDTO(Long id, String nome, String email, String password) {

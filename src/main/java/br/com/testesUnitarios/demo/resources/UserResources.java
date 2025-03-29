@@ -2,15 +2,16 @@ package br.com.testesUnitarios.demo.resources;
 
 import br.com.testesUnitarios.demo.DTO.UsersDTO;
 import br.com.testesUnitarios.demo.domain.Users;
+import br.com.testesUnitarios.demo.repositories.UserRepositories;
 import br.com.testesUnitarios.demo.services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,5 +36,14 @@ public class UserResources {
                 userServices.findAll().stream()
                         .map(x -> mapper.map(x, UsersDTO.class)).collect(Collectors.toList())
         );
+    }
+
+    @PostMapping(value = "/insertUser")
+    public ResponseEntity<UsersDTO> createUser(@RequestBody UsersDTO obj){
+            return ResponseEntity.created(
+                    ServletUriComponentsBuilder
+                         .fromCurrentRequest().path("/{id}")
+                              .buildAndExpand(userServices.create(obj).getId()).toUri()
+            ).build();
     }
 }
