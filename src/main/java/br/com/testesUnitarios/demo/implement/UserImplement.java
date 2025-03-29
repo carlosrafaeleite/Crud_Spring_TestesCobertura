@@ -8,6 +8,7 @@ import br.com.testesUnitarios.demo.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,4 +22,11 @@ public class UserImplement implements UserServices {
         Optional<Users> obj = userRepositories.findById(id);
         return obj.orElseThrow (()-> new ObjectNotFoundException("Objeto não encontrado"));
     }
+
+    @Override
+    public List<Users> findAll() {
+        return userRepositories.findAll();
+    }
+
+
 };
