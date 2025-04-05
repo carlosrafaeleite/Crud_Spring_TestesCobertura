@@ -3,6 +3,7 @@ package br.com.testesUnitarios.demo.implement;
 
 import br.com.testesUnitarios.demo.DTO.UsersDTO;
 import br.com.testesUnitarios.demo.domain.Users;
+import br.com.testesUnitarios.demo.services.exceptions.DataIntegrityViolationException;
 import br.com.testesUnitarios.demo.services.exceptions.ObjectNotFoundException;
 import br.com.testesUnitarios.demo.repositories.UserRepositories;
 import br.com.testesUnitarios.demo.services.UserServices;
@@ -35,8 +36,14 @@ public class UserImplement implements UserServices {
 
     @Override
     public Users create(UsersDTO obj) {
+        findByEmail(obj);
         return userRepositories.save(mapper.map(obj, Users.class));
     }
 
-
+    public void findByEmail(UsersDTO obj){
+        Optional<Users> users = userRepositories.findByEmail(obj.getEmail());
+        if (users.isPresent()){
+            throw new DataIntegrityViolationException("email ja cadastrado");
+        }
+    }
 };
