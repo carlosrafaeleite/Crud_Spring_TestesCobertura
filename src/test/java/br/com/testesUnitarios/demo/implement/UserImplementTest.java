@@ -32,6 +32,7 @@ class UserImplementTest {
     public static final String PASSWORD = "1234";
     public static final int INDEX = 0;
     public static final String EMAIL_JA_CADASTRADO = "email ja cadastrado";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
 
     @InjectMocks
     private UserImplement userImplement;
@@ -72,12 +73,12 @@ class UserImplementTest {
     void whenFindByIdReturnNotFound(){
         //Mockito.
         when(userRepositories.findById(Mockito.anyLong()))
-                .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+                .thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
         try{
             userImplement.findById(ID);
         }catch(Exception ex){
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals("Objeto não encontrado", ex.getMessage());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
         }
     }
 
@@ -152,6 +153,18 @@ class UserImplementTest {
         doNothing().when(userRepositories).deleteById(anyLong());
         userImplement.delete(ID);
         verify(userRepositories, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteNotFound() {
+        when(userRepositories.findById(Mockito.anyLong()))
+                .thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
+        try{
+            userImplement.delete(ID);
+        }catch (Exception ex){
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+        }
     }
 
     @Test
