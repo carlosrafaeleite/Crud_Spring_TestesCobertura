@@ -14,8 +14,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 
 @SpringBootTest
 class UserImplementTest {
@@ -24,6 +28,7 @@ class UserImplementTest {
     public static final String NOME     = "Antonella";
     public static final String EMAIL    = "Antonella@email";
     public static final String PASSWORD = "1234";
+    public static final int INDEX = 0;
 
     @InjectMocks
     private UserImplement userImplement;
@@ -47,31 +52,45 @@ class UserImplementTest {
 
     @Test
     void whenFindByIdReturnUserInstance() {
-        Mockito.when(userRepositories.findById(Mockito.anyLong())).thenReturn(optionalUsers);
+        //Mockito.when(userRepositories.findById(Mockito.anyLong())).thenReturn(optionalUsers);
+        when(userRepositories.findById(anyLong())).thenReturn(optionalUsers);
         Users response = userImplement.findById(ID);
 
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(Users.class, response.getClass());
-        Assertions.assertEquals(ID, response.getId());
-        Assertions.assertEquals(NOME, response.getNome());
-        Assertions.assertEquals(EMAIL, response.getEmail());
-        Assertions.assertEquals(PASSWORD, response.getPassword());
+        //Assertions.assertNotNull(response);
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NOME, response.getNome());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
     void whenFindByIdReturnNotFound(){
-        Mockito.when(userRepositories.findById(Mockito.anyLong()))
+        //Mockito.
+        when(userRepositories.findById(Mockito.anyLong()))
                 .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
         try{
             userImplement.findById(ID);
         }catch(Exception ex){
-            Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
-            Assertions.assertEquals("Objeto não encontrado", ex.getMessage());
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals("Objeto não encontrado", ex.getMessage());
         }
     }
 
     @Test
-    void findAll() {
+    void whenFindAllReturnListUsers() {
+        when(userRepositories.findAll()).thenReturn(List.of(users));
+        List<Users> response = userImplement.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(Users.class, response.get(INDEX).getClass());
+        assertEquals(ID, response.get(INDEX).getId());
+        assertEquals(NOME, response.get(INDEX).getNome());
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
+        assertEquals(PASSWORD, response.get(INDEX).getPassword());
+
     }
 
     @Test
