@@ -3,9 +3,11 @@ package br.com.testesUnitarios.demo.implement;
 import br.com.testesUnitarios.demo.DTO.UsersDTO;
 import br.com.testesUnitarios.demo.domain.Users;
 import br.com.testesUnitarios.demo.repositories.UserRepositories;
+import br.com.testesUnitarios.demo.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.function.Try;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -45,7 +47,6 @@ class UserImplementTest {
 
     @Test
     void whenFindByIdReturnUserInstance() {
-
         Mockito.when(userRepositories.findById(Mockito.anyLong())).thenReturn(optionalUsers);
         Users response = userImplement.findById(ID);
 
@@ -55,6 +56,18 @@ class UserImplementTest {
         Assertions.assertEquals(NOME, response.getNome());
         Assertions.assertEquals(EMAIL, response.getEmail());
         Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenFindByIdReturnNotFound(){
+        Mockito.when(userRepositories.findById(Mockito.anyLong()))
+                .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+        try{
+            userImplement.findById(ID);
+        }catch(Exception ex){
+            Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
+            Assertions.assertEquals("Objeto não encontrado", ex.getMessage());
+        }
     }
 
     @Test
