@@ -121,7 +121,16 @@ class UserImplementTest {
     }
 
     @Test
-    void update() {
+    void whenUpdateReturnUserSuccess()  {
+        when(userRepositories.save(any())).thenReturn(users);
+        Users response = userImplement.update(usersDTO);
+
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NOME, response.getNome());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
