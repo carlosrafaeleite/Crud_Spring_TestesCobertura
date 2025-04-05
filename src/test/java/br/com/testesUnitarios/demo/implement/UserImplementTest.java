@@ -147,7 +147,11 @@ class UserImplementTest {
     }
 
     @Test
-    void delete() {
+    void deleteSuccess() {
+        when(userRepositories.findById(anyLong())).thenReturn(optionalUsers);
+        doNothing().when(userRepositories).deleteById(anyLong());
+        userImplement.delete(ID);
+        verify(userRepositories, times(1)).deleteById(anyLong());
     }
 
     @Test
