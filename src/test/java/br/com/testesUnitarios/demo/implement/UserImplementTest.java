@@ -3,6 +3,7 @@ package br.com.testesUnitarios.demo.implement;
 import br.com.testesUnitarios.demo.DTO.UsersDTO;
 import br.com.testesUnitarios.demo.domain.Users;
 import br.com.testesUnitarios.demo.repositories.UserRepositories;
+import br.com.testesUnitarios.demo.services.exceptions.DataIntegrityViolationException;
 import br.com.testesUnitarios.demo.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +96,7 @@ class UserImplementTest {
     }
 
     @Test
-    void whenCreateReturnUser() {
+    void whenCreateReturnUserSuccess() {
         when(userRepositories.save(any())).thenReturn(users);
         Users response = userImplement.create(usersDTO);
 
@@ -105,6 +106,18 @@ class UserImplementTest {
         assertEquals(NOME, response.getNome());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenCreateReturnUserDataViolationException() {
+        when(userRepositories.findByEmail(anyString())).thenReturn(optionalUsers);
+        try {
+            optionalUsers.get().setId(2L);
+            userImplement.create(usersDTO);
+        } catch (Exception ex) {
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+            assertEquals("email ja cadastrado", ex.getMessage());
+        }
     }
 
     @Test
