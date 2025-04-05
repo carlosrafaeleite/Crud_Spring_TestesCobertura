@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class UserImplementTest {
 
+
     public static final long ID         = 1L;
     public static final String NOME     = "Antonella";
     public static final String EMAIL    = "Antonella@email";
@@ -94,7 +95,16 @@ class UserImplementTest {
     }
 
     @Test
-    void create() {
+    void whenCreateReturnUser() {
+        when(userRepositories.save(any())).thenReturn(users);
+        Users response = userImplement.create(usersDTO);
+
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NOME, response.getNome());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
