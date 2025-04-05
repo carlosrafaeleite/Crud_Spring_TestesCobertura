@@ -31,6 +31,7 @@ class UserImplementTest {
     public static final String EMAIL    = "Antonella@email";
     public static final String PASSWORD = "1234";
     public static final int INDEX = 0;
+    public static final String EMAIL_JA_CADASTRADO = "email ja cadastrado";
 
     @InjectMocks
     private UserImplement userImplement;
@@ -116,7 +117,7 @@ class UserImplementTest {
             userImplement.create(usersDTO);
         } catch (Exception ex) {
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
-            assertEquals("email ja cadastrado", ex.getMessage());
+            assertEquals(EMAIL_JA_CADASTRADO, ex.getMessage());
         }
     }
 
@@ -131,6 +132,18 @@ class UserImplementTest {
         assertEquals(NOME, response.getNome());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenUpdateReturnUserDataViolationException() {
+        when(userRepositories.findByEmail(anyString())).thenReturn(optionalUsers);
+        try {
+            optionalUsers.get().setId(2L);
+            userImplement.update(usersDTO);
+        } catch (Exception ex) {
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
+            assertEquals(EMAIL_JA_CADASTRADO, ex.getMessage());
+        }
     }
 
     @Test
