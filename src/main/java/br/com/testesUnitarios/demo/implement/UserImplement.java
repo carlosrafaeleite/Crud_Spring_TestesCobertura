@@ -40,9 +40,21 @@ public class UserImplement implements UserServices {
         return userRepositories.save(mapper.map(obj, Users.class));
     }
 
+    @Override
+    public Users update(UsersDTO obj) {
+        findByEmail(obj);
+        return userRepositories.save(mapper.map(obj, Users.class));
+    }
+
+    @Override
+    public void delete(Long id) {
+        findById(id);
+        userRepositories.deleteById(id);
+    }
+
     public void findByEmail(UsersDTO obj){
         Optional<Users> users = userRepositories.findByEmail(obj.getEmail());
-        if (users.isPresent()){
+        if (users.isPresent() && !users.get().getId().equals(obj.getId())){
             throw new DataIntegrityViolationException("email ja cadastrado");
         }
     }

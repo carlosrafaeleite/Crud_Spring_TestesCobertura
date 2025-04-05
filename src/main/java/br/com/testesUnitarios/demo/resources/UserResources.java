@@ -19,13 +19,15 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/initio")
 public class UserResources {
 
+    public static final String ID = "{id}";
+
     @Autowired
     private UserServices userServices;
 
     @Autowired
     private ModelMapper mapper;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/" + ID)
     public ResponseEntity<UsersDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(mapper.map(userServices.findById(id), UsersDTO.class));
     }
@@ -42,8 +44,21 @@ public class UserResources {
     public ResponseEntity<UsersDTO> createUser(@RequestBody UsersDTO obj){
             return ResponseEntity.created(
                     ServletUriComponentsBuilder
-                         .fromCurrentRequest().path("/{id}")
+                         .fromCurrentRequest().path("/" + ID)
                               .buildAndExpand(userServices.create(obj).getId()).toUri()
             ).build();
+    }
+
+    @PutMapping(value = "/alterar/" + ID)
+    public ResponseEntity<UsersDTO> update(@PathVariable Long id, @RequestBody UsersDTO obj){
+        findById(id);
+        obj.setId(id);
+        return  ResponseEntity.ok().body(mapper.map(userServices.update(obj), UsersDTO.class));
+    }
+
+    @DeleteMapping(value = "/excluir/" + ID)
+    public ResponseEntity<UsersDTO>delete(@PathVariable Long id){
+        userServices.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
