@@ -101,12 +101,23 @@ class UserResourcesTest {
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getHeaders().get("Location"));
-
-
     }
 
     @Test
-    void update() {
+    void updateResourcesSuccess() {
+        Mockito.when(userImplement.update(usersDTO)).thenReturn(users);
+        Mockito.when(mapper.map(Mockito.any(), Mockito.any())).thenReturn(usersDTO);
+        ResponseEntity<UsersDTO> response = userResources.update(ID, usersDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+
+        Assertions.assertEquals(ID, response.getBody().getId());
+        Assertions.assertEquals(NOME, response.getBody().getNome());
+        Assertions.assertEquals(EMAIL, response.getBody().getEmail());
+        Assertions.assertEquals(PASSWORD, response.getBody().getPassword());
     }
 
     @Test
