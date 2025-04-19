@@ -45,7 +45,7 @@ class ResourceExceptionHandlerTest {
     void dataIntegrityViolationReturnEntity() {
 
         ResponseEntity<StandarError> response = resourceExceptionHandler
-                .dataIntegrityViolation(new DataIntegrityViolationException("Oemail ja cadastrado"), new MockHttpServletRequest());
+                .dataIntegrityViolation(new DataIntegrityViolationException("email ja cadastrado"), new MockHttpServletRequest());
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getBody());
