@@ -38,8 +38,6 @@ class ResourceExceptionHandlerTest {
         Assertions.assertEquals(StandarError.class, response.getBody().getClass());
         Assertions.assertEquals("Objeto não encontrado", response.getBody().getError());
         Assertions.assertEquals(404, response.getBody().getStatus());
-
-
     }
 
     @Test
