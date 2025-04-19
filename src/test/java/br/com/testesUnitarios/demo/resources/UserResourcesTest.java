@@ -129,8 +129,8 @@ class UserResourcesTest {
     Assertions.assertEquals(ResponseEntity.class, response.getClass());
     Mockito.verify(userImplement, Mockito.times(1)).delete(Mockito.anyLong());
     Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-
     }
+
 
     private void iniciaUsuarios(){
         users = new Users(ID, NOME, EMAIL, PASSWORD);
