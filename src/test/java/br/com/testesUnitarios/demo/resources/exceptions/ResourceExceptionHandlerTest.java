@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -54,5 +56,7 @@ class ResourceExceptionHandlerTest {
         Assertions.assertEquals(StandarError.class, response.getBody().getClass());
         Assertions.assertEquals("email ja cadastrado", response.getBody().getError());
         Assertions.assertEquals(400, response.getBody().getStatus());
+        Assertions.assertNotEquals("/user/2", response.getBody().getPath());
+        Assertions.assertNotEquals(LocalDateTime.now(), response.getBody().getTimestamp());
     }
 }
