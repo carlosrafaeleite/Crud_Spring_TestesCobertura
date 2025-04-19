@@ -45,8 +45,7 @@ public class UserResources {
             return ResponseEntity.created(
                     ServletUriComponentsBuilder
                          .fromCurrentRequest().path("/" + ID)
-                              .buildAndExpand(userServices.create(obj).getId()).toUri()
-            ).build();
+                              .buildAndExpand(userServices.create(obj).getId()).toUri()).build();
     }
 
     @PutMapping(value = "/alterar/" + ID)

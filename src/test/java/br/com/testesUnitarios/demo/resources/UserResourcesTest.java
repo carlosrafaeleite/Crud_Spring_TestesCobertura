@@ -91,13 +91,18 @@ class UserResourcesTest {
         Assertions.assertEquals(NOME, response.getBody().get(INDEX).getNome());
         Assertions.assertEquals(EMAIL, response.getBody().get(INDEX).getEmail());
         Assertions.assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
-
-
-
     }
 
     @Test
-    void createUser() {
+    void createUserResourcesSuccess() {
+        Mockito.when(userImplement.create(Mockito.any())).thenReturn(users);
+        ResponseEntity<UsersDTO> response = userResources.createUser(usersDTO);
+
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertNotNull(response.getHeaders().get("Location"));
+
+
     }
 
     @Test
